@@ -18,3 +18,11 @@
     label="Oranje label onder de titel"
 />
 
+
+
+
+<x-twill::medias
+    name="image"
+    label="Achtergrond afbeelding"
+/>
+
