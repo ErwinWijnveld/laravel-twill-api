@@ -145,6 +145,11 @@ class BlockController extends Controller
                 "role" => optional($file)->pivot->role,
             ];
         });
+
+        $block->files = collect($block->files)
+            ->groupBy("role")
+            ->toArray();
+
         // if files is empty array, set to null
         if (count($block->files) == 0) {
             $block->files = null;

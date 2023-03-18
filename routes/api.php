@@ -2,9 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Resources\PageResource;
-use App\Models\Page;
-use App\Models\Slugs\PageSlug;
+use App\Http\Controllers\Twill\PageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,18 +17,8 @@ use App\Models\Slugs\PageSlug;
 
 Route::group(["prefix" => "v1"], function () {
     // pages
-
-    Route::get("page/{slug}", function ($slug) {
-        $page = Page::find(
-            PageSlug::where("slug", $slug)
-                ->get()
-                ->first()->page_id
-        );
-        return new PageResource($page);
-    });
+    Route::get("page/{slug}", PageController::class . "@apiIndex");
 
     // slugs
-    Route::get("page-slugs", function () {
-        return PageSlug::all()->pluck("slug");
-    });
+    Route::get("page-slugs", PageController::class . "@slugs");
 });

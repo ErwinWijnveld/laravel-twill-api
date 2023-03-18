@@ -1,28 +1,40 @@
-@twillBlockTitle('Hero Big')
-@twillBlockIcon('text')
+@twillBlockTitle('Homepagina voorkant (groot)')
+@twillBlockIcon('test-icon')
 @twillBlockGroup('app')
 
-<x-twill::input
-    name="label"
-    label="Label boven titel"
-/>
+{{-- Validation --}}
+@twillBlockValidationRules([
+    'text' => 'required'
+])
 
-<x-twill::input
-    name="titel"
-    label="Titel"
-/>
+{{-- input fields --}}
+@formColumns
+@slot('left')
+    <x-twill::medias 
+        name="img" 
+        label="Linker foto"
+    />
+    @include('twill.partials.link', [
+        'textFieldName' => 'link_1_text',
+        'urlFieldName' => 'link_1_url',
+    ])
+@endslot
+@slot('right')
+    <x-twill::medias 
+    name="img_1" 
+    label="Rechter foto"
+    />
+    @include('twill.partials.link', [
+        'textFieldName' => 'link_2_text',
+        'urlFieldName' => 'link_2_url',
+    ])
+@endslot
+@endformColumns
 
+    <x-twill::wysiwyg name="text" :label="twillTrans('Tekst')" :toolbar-options="\App\GlobalVariables::$wysiwygOptions" :edit-source="true" />
 
-<x-twill::input
-    name="label_2"
-    label="Oranje label onder de titel"
-/>
-
-
-
-
-<x-twill::medias
-    name="image"
-    label="Achtergrond afbeelding"
-/>
+    @include('twill.partials.link', [
+        'textFieldName' => 'link_center_text',
+        'urlFieldName' => 'link_center_url',
+    ])
 
