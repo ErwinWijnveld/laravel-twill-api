@@ -11,7 +11,6 @@ class BlockController extends Controller
     public static $idArray = [];
     public static $firstLayerIdArray = [];
     public static $removeableFirstLayerIdArray = [];
-    public static $hasVacArchive = false;
     public static $currentReq = false;
 
     /**
@@ -62,7 +61,6 @@ class BlockController extends Controller
             $blocks_data = array_values($blocks_data->toArray());
 
             return [
-                "has_vac_archive" => self::$hasVacArchive,
                 "block_data" => $blocks_data,
             ];
         }
@@ -105,11 +103,6 @@ class BlockController extends Controller
     // get all data for the block
     public static function getBlockData($block)
     {
-        // check if type is "vac_archive"
-        if ($block->type == "vac_archive") {
-            self::$hasVacArchive = true;
-        }
-
         // get medias data
         $block->medias = $block->medias->map(function ($image) {
             return [
@@ -171,21 +164,7 @@ class BlockController extends Controller
     public static function extraBlockData($block)
     {
         switch ($block->type) {
-            case "foodstand-slider":
-                $foodstandSlider = new FoodstandSlider();
-
-                return [
-                    "related_foodstands" => $foodstandSlider->getRelatedFoodstands(
-                        self::$currentReq
-                    ),
-                ];
-
-            case "foodstand-archive":
-                $foodstandSlider = new FoodstandArchive();
-
-                return [
-                    "foodstands" => $foodstandSlider->getFoodstands(),
-                ];
+            // check on
 
             default:
                 return null;
