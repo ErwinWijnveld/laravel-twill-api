@@ -20,6 +20,7 @@ class CreateBlogsTables extends Migration
             $table->text("seo_description")->nullable();
 
             $table->text("content")->nullable();
+            $table->text("excerpt")->nullable();
             $table->text("author")->nullable();
             $table->dateTime("date")->nullable();
             $table->text("button_title")->nullable();

@@ -2,6 +2,10 @@
 
 @section('contentFields')
 
+<x-twill::medias name="img" :label="twillTrans('Afbeelding')" />
+
+{{-- title --}}
+
 @formColumns
     @slot('left')
         {{-- author --}}
@@ -15,6 +19,9 @@
     />
     @endslot
 @endformColumns
+
+{{-- excerpt --}}
+<x-twill::input name="excerpt" :label="twillTrans('Samenvatting')" type="textarea" :rows="3" />
 
 {{-- content --}}
 <x-twill::wysiwyg name="content" :label="twillTrans('Tekst')" :toolbar-options="\App\GlobalVariables::$wysiwygOptions" :edit-source="true" />

@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use A17\Twill\Services\MediaLibrary\ImageService;
-use App\Blocks\FoodstandSlider;
-use App\Blocks\FoodstandArchive;
 
 class BlockController extends Controller
 {
@@ -68,7 +66,11 @@ class BlockController extends Controller
         return null;
     }
 
-    // get children recursivwely
+    /**
+     * Get block data
+     * @param Block $block
+     * @return array
+     */
     public static function recursiveChildren($blocks)
     {
         // if blocks is empty array, return null
@@ -100,7 +102,11 @@ class BlockController extends Controller
         return $blocks_data;
     }
 
-    // get all data for the block
+    /**
+     * Get block data
+     * @param Block $block
+     * @return array
+     */
     public static function getBlockData($block)
     {
         // get medias data
@@ -152,7 +158,7 @@ class BlockController extends Controller
         return [
             "id" => $block->id,
             "type" => $block->type,
-            "content" => $block->content,
+            "content" => self::getContent($block->content),
             "position" => $block->position,
             "children" => self::recursiveChildren($block->children),
             "medias" => $block->medias,
@@ -161,13 +167,49 @@ class BlockController extends Controller
         ];
     }
 
+    /**
+     * Extra block data
+     * @param Block $block
+     * @return Response
+     */
     public static function extraBlockData($block)
     {
         switch ($block->type) {
-            // check on
+            // case "featured-blogs":
+            //     return FeaturedBlogs::getBrowserBlogsDynamic($block);
 
             default:
                 return null;
         }
+    }
+
+    /**
+     * Get content
+     * @param Content $content
+     * @return Response
+     */
+    public static function getContent($content)
+    {
+        // Get browser data items
+        if (array_key_exists("browsers", $content)) {
+            $browsers = $content["browsers"];
+            foreach ($browsers as $key => $value) {
+                // key make first letter uppercase
+                $key_uppercase = ucfirst($key);
+                // if ends with s remove s
+                if (substr($key_uppercase, -1) == "s") {
+                    $key_uppercase = substr($key_uppercase, 0, -1);
+                }
+                // get items that match the value
+                $model = "App\Models\\$key_uppercase";
+                $items = $model::whereIn("id", $value)->get();
+                // get resource
+                $resource = "App\Http\Resources\\{$key_uppercase}Resource";
+                $items = $resource::collection($items);
+
+                $content["browsers"][$key] = $items;
+            }
+        }
+        return $content;
     }
 }

@@ -22,6 +22,7 @@ class Blog extends Model implements Sortable
         "seo_description",
         "position",
         "content",
+        "excerpt",
         "author",
         "date",
         "button_title",

@@ -9,14 +9,50 @@ use A17\Twill\Services\Forms\Fields\Input;
 use A17\Twill\Services\Forms\Form;
 use A17\Twill\Http\Controllers\Admin\ModuleController as BaseModuleController;
 
+use Illuminate\Support\Facades\Cache;
+use App\Http\Resources\BlogResource;
+use App\Models\Blog;
+use App\Models\Slugs\BlogSlug;
+
 class BlogController extends BaseModuleController
 {
     protected $moduleName = "blogs";
+    /**
+     * Get accurate api data for the module
+     */
+    public function apiIndex($slug)
+    {
+        $previewing = request()->has("preview_token");
+
+        if ($previewing) {
+            $blog = Cache::get(request("preview_token"));
+        } else {
+            $blog = Blog::where("published", 1)
+                ->whereHas("slugs", function ($query) use ($slug) {
+                    $query->where("slug", $slug);
+                })
+                ->first();
+        }
+
+        return $blog ? new BlogResource($blog) : abort(404);
+    }
+
+    public function slugs()
+    {
+        return BlogSlug::whereIn(
+            "blog_id",
+            Blog::where("published", 1)->pluck("id")
+        )->pluck("slug");
+    }
+
     /**
      * This method can be used to enable/disable defaults. See setUpController in the docs for available options.
      */
     protected function setUpController(): void
     {
+        $this->enableDuplicate();
+        $this->enableReorder();
+        $this->enableFeature();
     }
 
     /**

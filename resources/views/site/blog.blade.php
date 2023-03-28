@@ -1,0 +1,1 @@
+@include('site.partials.preview', ['item' => $item, 'slugPrefix' => '/nieuwtjes/'])
