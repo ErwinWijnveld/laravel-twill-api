@@ -52,6 +52,7 @@ class PageController extends BaseModuleController
      */
     protected function setUpController(): void
     {
+        $this->enableDuplicate();
     }
 
     /**

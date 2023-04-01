@@ -3,13 +3,15 @@
 namespace App\Http\Controllers;
 
 use A17\Twill\Services\MediaLibrary\ImageService;
+use Illuminate\Http\Request;
+use App\Blocks\FeaturedReviews;
 
 class BlockController extends Controller
 {
     public static $idArray = [];
     public static $firstLayerIdArray = [];
     public static $removeableFirstLayerIdArray = [];
-    public static $currentReq = false;
+    public static $currentItem = false;
 
     /**
      * Blocks
@@ -18,7 +20,7 @@ class BlockController extends Controller
      */
     public static function getBlocks($current)
     {
-        self::$currentReq = $current;
+        self::$currentItem = $current;
         $blocks_data = [];
         if ($current->blocks()->get()) {
             $blocks = $current->blocks()->get();
@@ -175,8 +177,8 @@ class BlockController extends Controller
     public static function extraBlockData($block)
     {
         switch ($block->type) {
-            // case "featured-blogs":
-            //     return FeaturedBlogs::getBrowserBlogsDynamic($block);
+            case "featured-reviews":
+                return FeaturedReviews::getReviewStats();
 
             default:
                 return null;
@@ -193,6 +195,9 @@ class BlockController extends Controller
         // Get browser data items
         if (array_key_exists("browsers", $content)) {
             $browsers = $content["browsers"];
+            $current_item_id = self::$currentItem->id;
+            $current_item_resource_name = get_class(self::$currentItem);
+
             foreach ($browsers as $key => $value) {
                 // key make first letter uppercase
                 $key_uppercase = ucfirst($key);
@@ -203,8 +208,25 @@ class BlockController extends Controller
                 // get items that match the value
                 $model = "App\Models\\$key_uppercase";
                 $items = $model::whereIn("id", $value)->get();
+
                 // get resource
                 $resource = "App\Http\Resources\\{$key_uppercase}Resource";
+
+                // filter any items that match $resource to $current_item_resource_name and have matching ids
+                $items = $items->filter(function ($item) use (
+                    $current_item_resource_name,
+                    $current_item_id,
+                    $resource
+                ) {
+                    if (
+                        $resource == $current_item_resource_name &&
+                        $item->id == $current_item_id
+                    ) {
+                        return false;
+                    }
+                    return true;
+                });
+
                 $items = $resource::collection($items);
 
                 $content["browsers"][$key] = $items;

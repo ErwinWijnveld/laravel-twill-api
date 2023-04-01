@@ -1,6 +1,28 @@
-@twillBlockTitle('Text links met foto rechts')
+@twillBlockTitle('Tekst naast foto')
 @twillBlockIcon('text')
 @twillBlockGroup('app')
+
+@php
+    $options = [
+  
+        [
+            'value' => 'left',
+            'label' => 'Links'
+        ],
+        [
+            'value' => 'right',
+            'label' => 'Rechts'
+        ],
+    ];
+@endphp
+
+<x-twill::radios
+    name="image_position"
+    label="Foto positie"
+    default="right"
+    :inline="true"
+    :options="$options"
+/>
 
 @formColumns
     @slot('left')
