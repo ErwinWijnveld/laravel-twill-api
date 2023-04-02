@@ -3,8 +3,8 @@
 @twillRepeaterTrigger('Add usp')
 @twillRepeaterGroup('app')
 
-<x-twill::files 
-    name="icon" 
+<x-twill::medias 
+    name="img" 
     label="Icoontje"
 />
 

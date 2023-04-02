@@ -8,3 +8,5 @@ use A17\Twill\Facades\TwillRoutes;
 TwillRoutes::module('pages');
 TwillRoutes::module('blogs');
 TwillRoutes::module('reviews');
+TwillRoutes::module('menuses');
+TwillRoutes::module('menus');

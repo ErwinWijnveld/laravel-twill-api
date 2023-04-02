@@ -20,6 +20,12 @@ class BlockController extends Controller
      */
     public static function getBlocks($current)
     {
+        // Reset the public static variables
+        self::$idArray = [];
+        self::$firstLayerIdArray = [];
+        self::$removeableFirstLayerIdArray = [];
+
+        // set currentitem
         self::$currentItem = $current;
         $blocks_data = [];
         if ($current->blocks()->get()) {

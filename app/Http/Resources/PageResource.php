@@ -32,7 +32,7 @@ class PageResource extends JsonResource
                     "title" => $this->seo_title ?? $this->title,
                     "description" => $this->seo_description ?? null,
                 ],
-                // "menus" => new MenuCollection(Menu::all()),
+                "menus" => new MenuCollection(Menu::all()),
             ];
         } catch (\Exception $e) {
             return response()->json($e);

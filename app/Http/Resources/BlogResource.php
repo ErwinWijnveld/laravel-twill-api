@@ -44,7 +44,7 @@ class BlogResource extends JsonResource
                 "excerpt" => $this->excerpt,
                 "button_title" => $this->button_title,
                 "button_link" => $this->button_link,
-                // "menus" => new MenuCollection(Menu::all()),
+                "menus" => new MenuCollection(Menu::all()),
             ];
         } catch (\Exception $e) {
             return response()->json($e);
